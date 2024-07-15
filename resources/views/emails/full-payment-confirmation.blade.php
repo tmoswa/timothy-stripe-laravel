@@ -3,7 +3,7 @@
 <h1>Full Payment Confirmation</h1>
 <p>Hey {{$order->customer->name}}</p>
 
-<p>We have deducted the balance of {{\Money\Money::USD((integer)((($order->amount_total->getAmount())/2)))}} on your previous order. Thank you.</p>
+<p>We have deducted the balance on your previous order. Thank you.</p>
 
 <p class="mt-10">Click button below to checkout:</p>
 
