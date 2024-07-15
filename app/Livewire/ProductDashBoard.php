@@ -86,7 +86,7 @@ class ProductDashBoard extends Component
     public function saveData()
     {
         $this->validate();
-        if ($this->photos == null && $this->id == null) {
+        if ($this->photos == null) {
             flash()->error('Please add product Image(s) to proceed!');
             return;
         }
