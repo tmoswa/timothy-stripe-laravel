@@ -26,3 +26,5 @@ Route::middleware([
 ])->group(function () {
     Route::get('/dashboard', \App\Livewire\ProductDashBoard::class)->name('dashboard');
 });
+
+

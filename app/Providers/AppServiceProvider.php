@@ -41,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
        Cashier::calculateTaxes();
         Fortify::authenticateUsing(function (Request $request) {
             $user = User::where('email', $request->email)->first();
+            if ($user &&
+                Hash::check($request->password, $user->password)) {
+                return $user;
+            }
         });
         Blade::stringable(function(Money $money)
         {
