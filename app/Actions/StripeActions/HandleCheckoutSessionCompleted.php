@@ -22,7 +22,7 @@ class HandleCheckoutSessionCompleted
      * ToDo
      * Make the itemsSave method to saveMany()
      */
-    public function handle($sessionId,bool $testMode=false)
+    public function handle($sessionId)
     {
         DB::transaction(function () use ($sessionId) {
             $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
@@ -64,7 +64,6 @@ class HandleCheckoutSessionCompleted
                 Mail::to($customer)->send(new OrderConfirmation($order));
             }
         });
-        return ($testMode)?"success" :"";
     }
 
 }

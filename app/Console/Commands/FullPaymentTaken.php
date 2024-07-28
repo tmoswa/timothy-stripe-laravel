@@ -30,7 +30,7 @@ class FullPaymentTaken extends Command
      * Execute the console command.
      * This method is run every minute based on configurations in console.php
      */
-    public function handle(bool $testMode=false)
+    public function handle()
     {
         $depositedOrders = Order::whereTime('created_at', '<', now()->subMinutes(5))->whereColumn('amount_total', '>', 'amount_paid')->get();
         foreach ($depositedOrders as $myOrder) {
@@ -57,6 +57,5 @@ class FullPaymentTaken extends Command
             }
 
         }
-        return ($testMode)?"success" :"";
     }
 }
