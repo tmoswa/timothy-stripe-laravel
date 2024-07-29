@@ -21,6 +21,7 @@ class ProductDashBoard extends Component
 
     public $photos;
     public $existingPhotos;
+    public $uploading = false;
 
     /*
      * There are 2 types of deleting happening on one page so we need a bit of variables
@@ -90,6 +91,7 @@ class ProductDashBoard extends Component
             flash()->error('Please add product Image(s) to proceed!');
             return;
         }
+        $this->uploading = true;
         $product = Product::updateOrCreate(['id' => $this->id], [
             'name' => $this->name,
             'price' => $this->price,
@@ -106,6 +108,7 @@ class ProductDashBoard extends Component
                 $imageModel->save();
             };
         }
+        $this->uploading = false;
         flash()->success('Saved Successfully.');
         $this->closeModalPopover();
     }

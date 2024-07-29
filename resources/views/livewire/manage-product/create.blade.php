@@ -27,7 +27,7 @@
                             @error('name') <span class="text-red-500">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-2">
-                            <x-label for="price" value="{{ __('Price:') }}"/>
+                            <x-label for="price" value="{{ __('Price(in cents):') }}"/>
                             <x-input id="price" type="number" min="100" max="1000000000000"  name="price"  class="block mt-1 w-full" required
                                      wire:model="price"/>
                             @error('price') <span class="text-red-500">{{ $message }}</span>@enderror
@@ -50,9 +50,15 @@
                                     @endforeach
                                 @endif
                             </div>
-                            <label>Choose Images</label>
-                            <input type="file" wire:model="photos" id="photos" multiple>
+                            <label for="photos" name="">Choose Images</label>
+                            <input type="file" wire:model="photos" id="photos" multiple accept="image/*">
                             @error('photos.*') <span class="error text-red-600">{{ $message }}</span> @enderror
+                            <!-- Image loader -->
+                            <div wire:loading wire:target="photos">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Uploading...</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
