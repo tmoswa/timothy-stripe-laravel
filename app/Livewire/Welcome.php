@@ -8,9 +8,10 @@ use Livewire\Component;
 class Welcome extends Component
 {
     public $searchContent = '';
+    public $paginate=8;
     public function getProductProperty()
     {
-        return Product::query()->where('name', 'like', '%' . $this->searchContent . '%')->paginate(8);
+        return Product::query()->where('name', 'like', '%' . $this->searchContent . '%')->paginate($this->paginate);
     }
     public function render()
     {

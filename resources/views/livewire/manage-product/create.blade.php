@@ -28,13 +28,14 @@
                         </div>
                         <div class="mb-2">
                             <x-label for="price" value="{{ __('Price(in cents):') }}"/>
-                            <x-input id="price" type="number" min="100" max="1000000000000"  name="price"  class="block mt-1 w-full" required
+                            <x-input id="price" type="number" min="100" max="1000000000000" name="price"
+                                     class="block mt-1 w-full" required
                                      wire:model="price"/>
                             @error('price') <span class="text-red-500">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-4 grid grid-cols-1">
                             <x-label for="description" value="{{ __('Description:') }}"/>
-                            <x-input id="description" name="description" class="block mt-1 w-full" type="text"  required
+                            <x-input id="description" name="description" class="block mt-1 w-full" type="text" required
                                      wire:model="description"/>
                             @error('description') <span class="text-red-500">{{ $message }}</span>@enderror
                         </div>

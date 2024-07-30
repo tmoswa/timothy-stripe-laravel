@@ -18,6 +18,7 @@ class ProductDashBoard extends Component
     public $searchContent = '';
     public $isModalOpen = 0;
     public $name, $price, $description;
+    public $paginate=1;
 
     public $photos;
     public $existingPhotos;
@@ -28,13 +29,12 @@ class ProductDashBoard extends Component
      * ToDo
      * Optimize and reduce these variables
      */
-    public $deleteTitle = '';
     public $isDeleteClicked = false;
-    public $deleteId;
     public $deleteProduct = false;
     public $deleteImage = false;
     public $photoDelete;
-
+    public $deleteTitle = '';
+    public $deleteId;
 
     protected $rules = [
         'name' => 'required|min:2',
@@ -44,7 +44,7 @@ class ProductDashBoard extends Component
 
     public function getProductProperty()
     {
-        return Product::where('name', 'like', '%' . $this->searchContent . '%')->paginate(1);
+        return Product::where('name', 'like', '%' . $this->searchContent . '%')->paginate($this->paginate);
     }
 
     public function render()
@@ -66,11 +66,6 @@ class ProductDashBoard extends Component
     public function closeModalPopover()
     {
         $this->isModalOpen = false;
-    }
-
-    public function closeDeleteModal()
-    {
-
     }
 
     private function resetCreateForm()
@@ -162,7 +157,7 @@ class ProductDashBoard extends Component
     }
 
     /*
-     * Because of Time i am leaving this here but its the stupidest code i have ever written
+     * Because of Time i am leaving this here
      * ToDo
      * Make a single method
      */
@@ -183,6 +178,13 @@ class ProductDashBoard extends Component
         $this->deleteProduct = false;
         $this->deleteImage = true;
     }
+    public function deleteDetail()
+    {
+        ($this->deleteProduct) ?
+            $this->deleteProduct($this->deleteId) :
+            $this->removePhoto($this->photoDelete);
+    }
+
 
     public function closeModal()
     {
@@ -192,13 +194,6 @@ class ProductDashBoard extends Component
         $this->deleteProduct = false;
         $this->deleteImage = false;
         $this->deleteId = null;
-    }
-
-    public function deleteDetail()
-    {
-        ($this->deleteProduct) ?
-            $this->deleteProduct($this->deleteId) :
-            $this->removePhoto($this->photoDelete);
     }
 
 }

@@ -3,10 +3,10 @@
 namespace App\Actions\StripeActions;
 
 use App\Mail\OrderConfirmation;
-use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Cashier\Cashier;
 use Stripe\LineItem;
@@ -61,9 +61,14 @@ class HandleCheckoutSessionCompleted
                             'amount_total' => $line->amount_total,
                         ]);
                 });
-                Mail::to($customer)->send(new OrderConfirmation($order));
             }
         });
+
+        // Sending email outside of transaction closure
+        $order = Order::where('stripe_checkout_session_id', $sessionId)->first();
+        if ($order) {
+            Mail::to($order->customer)->send(new OrderConfirmation($order));
+        }
     }
 
 }
