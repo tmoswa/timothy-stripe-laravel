@@ -2,11 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Actions\StripeActions\CreateStripeCheckoutSession;
+use App\Actions\ShopActions\AddProductToCart;
+use App\Actions\ShopActions\CreateStripeCheckoutSession;
 use App\Models\Customer;
 use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
-use \App\Actions\StripeActions\AddProductVariantToCart;
+use \App\Actions\ShopActions\AddProductVariantToCart;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use Stripe\StripeClient;
@@ -64,9 +65,10 @@ class ProductDetail extends Component
        return $checkoutSession->guestClientPurchase($customer,$this->product,$this->quantity,$this->isDeposit);
     }
 
-    public function addToCart(AddProductVariantToCart $cart)
+    public function addToCart(AddProductToCart $cart)
     {
-        $cart->add(variantId:$this->quantity);
+        $this->validate();
+        $cart->add($this->product,$this->quantity);
         $this -> dispatch('productAddedToCart');
     }
 }

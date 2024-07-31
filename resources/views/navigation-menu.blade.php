@@ -14,6 +14,7 @@
                     <x-nav-link href="{{ route('home') }}" :active="request()->routeIs('home')">
                         {{ __('Main Page') }}
                     </x-nav-link>
+                        @livewire('cart-detail')
                      @endauth
                 </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex float-right">

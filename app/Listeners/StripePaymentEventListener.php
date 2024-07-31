@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Actions\StripeActions\HandleCheckoutSessionCompleted;
+use App\Actions\ShopActions\HandleCheckoutSessionCompleted;
 use Illuminate\Support\Facades\Log;
 use Laravel\Cashier\Events\WebhookReceived;
 use Illuminate\Support\Facades\Cache;

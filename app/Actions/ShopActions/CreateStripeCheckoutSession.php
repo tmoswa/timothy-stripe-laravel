@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Actions\StripeActions;
+namespace App\Actions\ShopActions;
 
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Customer;
 use App\Models\Product;
 use Money\Money;
+use Illuminate\Database\Eloquent\Collection;
 
 class CreateStripeCheckoutSession
 {
@@ -20,7 +21,6 @@ class CreateStripeCheckoutSession
             ->checkout(
                 [$this->formatProduct($product, $quantity, $isDeposit)],
                 [
-                    //'saved_payment_method_options' => ['payment_method_save' => 'enabled'],
                     'payment_intent_data' => ['setup_future_usage' => 'off_session'],
                     'success_url' => route('checkout-status') . '?session_id={CHECKOUT_SESSION_ID}',
                     'cancel_url' => route('product', $product->id),
@@ -61,6 +61,56 @@ class CreateStripeCheckoutSession
             ],
             'quantity' => $quantity,
         ];
+    }
+
+
+
+
+
+
+    public function createFromCart(Cart $cart)
+    {
+        return $cart->customer
+            ->allowPromotionCodes()
+            ->checkout(
+                $this->formatCartItems($cart->items),
+                [
+                    'customer_update'=>[
+                        'shipping' => 'auto'
+                    ],
+                    'shipping_address_collection'=>[
+                        'allowed_countries'=>[
+                            'US','NL','ZW','SA'
+                        ]
+                    ],
+                    'success_url'=>route('checkout-status').'?session_id={CHECKOUT_SESSION_ID}',
+                    'cancel_url'=>route('cart'),
+                    'metadata'=>[
+                        'customer_id'=>$cart->customer->id,
+                        'cart_id'=>$cart->id,
+                    ]
+                ]
+            );
+    }
+
+    private function formatCartItems(Collection $items)
+    {
+        return $items->loadMissing('product')->map(function (CartItem $item){
+            return [
+                'price_data' => [
+                    'currency' => 'USD',
+                    'unit_amount' => $item->product->price->getAmount(),
+                    'product_data' => [
+                        'name' => $item->product->name,
+                        'description' => $item->product->description,
+                        'metadata' => [
+                            'product_id' => $item->product->id,
+                        ]
+                    ]
+                ],
+                'quantity' => $item->quantity,
+            ];
+        })->toArray();
     }
 
 }

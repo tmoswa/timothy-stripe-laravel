@@ -29,6 +29,9 @@
             <div class="px-2 mt-6 grid grid-cols-2 gap-1">
                 <x-button class="button-success col-span-1"> Buy(Once Off) </x-button>
                 <x-button class="button-success col-span-1" wire:click="deposit"> Deposit(50% then Auto Full Payment in 5 minutes) </x-button>
+                <div class="mt-6">
+                    <x-button wire:click="addToCart"> Add to cart</x-button>
+                </div>
             </div>
         </form>
     </div>

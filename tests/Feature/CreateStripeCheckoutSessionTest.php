@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Actions\StripeActions\CreateStripeCheckoutSession;
+use App\Actions\ShopActions\CreateStripeCheckoutSession;
 use App\Models\Customer;
 use App\Models\Image;
 use App\Models\Product;

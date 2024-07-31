@@ -5,7 +5,7 @@
 
 <p>We have deducted the balance on your previous order. Thank you.</p>
 
-<p class="mt-10">Click button below to checkout:</p>
+<p class="mt-10">Click button below to shop again:</p>
 
  @component('mail::button',['url'=>route('home'),'color'=>'success'])
         Order Again

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Actions\StripeActions;
+namespace App\Actions\ShopActions;
 
 use App\Mail\OrderConfirmation;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -14,22 +15,20 @@ use Stripe\LineItem;
 class HandleCheckoutSessionCompleted
 {
     /**
-     * 1. Receive Cashier's Stripe session and use it to link customer
-     * 2. Check for duplicates and proceed
+     * 1. Receive Cashier's Stripe session and use it to link customer and cart and cartItems
+     * 2. Check to avoid duplicates and proceed
      * 3. Create main Order followed by order Items
-     * 4. This method loops through all order items and save them to the database
-     * 5. The use of firstOrCreate is to avoid duplicates
-     * ToDo
-     * Make the itemsSave method to saveMany()
      */
     public function handle($sessionId)
     {
-        DB::transaction(function () use ($sessionId) {
+        $result=DB::transaction(function () use ($sessionId) {
             $session = Cashier::stripe()->checkout->sessions->retrieve($sessionId);
             $orderSaved = Order::Where('stripe_checkout_session_id', '!=', $session->id)->count();
             if ($orderSaved == 0) ;
             {
                 $customer = Customer::find($session->metadata->customer_id);
+                $cart = Cart::find($session->metadata->cart_id);
+
                 $amountTotal = $session->amount_total;
                 $order = $customer->orders()->updateOrCreate(['stripe_checkout_session_id' => $session->id], [
                     'stripe_checkout_session_id' => $session->id,
@@ -42,15 +41,12 @@ class HandleCheckoutSessionCompleted
                 ]);
                 $lineItems = Cashier::stripe()->checkout->sessions->allLineItems($session->id);
 
-                collect($lineItems->all())->map(function (LineItem $line) use ($order) {
+                $orderItems = collect($lineItems->all())->map(function (LineItem $line) use ($order) {
                     $product = Cashier::stripe()->products->retrieve($line->price->product);
-                    return $order->items()->firstOrCreate(
+                    return new OrderItem(
                         [
                             'product_id' => $product->metadata->product_id,
-                            'order_id' => $order->id
-                        ],
-                        [
-                            'product_id' => $product->metadata->product_id,
+                            'order_id' => $order->id,
                             'name' => $product->name,
                             'description' => $product->description,
                             'price' => $line->price->unit_amount,
@@ -60,15 +56,22 @@ class HandleCheckoutSessionCompleted
                             'amount_tax' => $line->amount_tax,
                             'amount_total' => $line->amount_total,
                         ]);
+
                 });
+                $order->items()->saveMany($orderItems);
+                $cart->items()->delete();
+                $cart->delete();
             }
         });
 
         // Sending email outside of transaction closure
-        $order = Order::where('stripe_checkout_session_id', $sessionId)->first();
-        if ($order) {
-            Mail::to($order->customer)->send(new OrderConfirmation($order));
+        if($result==='Success!'){
+            $order = Order::where('stripe_checkout_session_id', $sessionId)->first();
+            if ($order) {
+                Mail::to($order->customer)->send(new OrderConfirmation($order));
+            }
         }
+
     }
 
 }
