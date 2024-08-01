@@ -12,6 +12,7 @@ Route::get('/', Welcome::class)->name('home');
 Route::get('/product/{productId}', ProductDetail::class)->name('product');
 Route::get('/cart', Cart::class)->name('cart');
 
+
 Route::get('/checkout-status', CheckoutStatus::class)->name('checkout-status');
 
 Route::get('/email-preview', function(){

@@ -2,6 +2,23 @@
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-col-5">
         <div class="flex justify-between h-16">
+            <div class="space-x-8 py-5 hidden md:block">
+                Super Bike Sales
+            </div>
+            <div class="space-x-8 py-5">
+                @if (Route::currentRouteName() == 'home')
+                    <header>Our Products</header>
+                @elseif (Route::currentRouteName() == 'register')
+                    <header>Register</header>
+                @elseif (Route::currentRouteName() == 'login')
+                    <header>Login</header>
+                @elseif (Route::currentRouteName() == 'product')
+                    <header>Product Detail</header>
+                @elseif (Route::currentRouteName() == 'cart')
+                    <header>Your Shopping Cart</header>
+                @endif
+
+            </div>
             <div class="flex">
 
                 <!-- Navigation Links -->

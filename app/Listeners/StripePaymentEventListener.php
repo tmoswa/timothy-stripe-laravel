@@ -23,6 +23,7 @@ class StripePaymentEventListener
      */
     public function handle(WebhookReceived $event): void
     {
+
         if($event->payload['type']=='checkout.session.completed'){
 
             $webhookId = $event->payload['data']['object']['id'];
