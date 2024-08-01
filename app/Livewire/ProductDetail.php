@@ -7,10 +7,6 @@ use App\Actions\ShopActions\CreateStripeCheckoutSession;
 use App\Models\Customer;
 use Laravel\Jetstream\InteractsWithBanner;
 use Livewire\Component;
-use \App\Actions\ShopActions\AddProductVariantToCart;
-use Stripe\PaymentIntent;
-use Stripe\Stripe;
-use Stripe\StripeClient;
 
 class ProductDetail extends Component
 {
@@ -22,6 +18,8 @@ class ProductDetail extends Component
     public $name;
     public $email;
     public bool $isDeposit=false;
+
+    public $paymentType;
 
     public $rules=[
         'quantity'=>['required','integer'],
@@ -41,13 +39,15 @@ class ProductDetail extends Component
     }
     public function buy(){
         $this->validate();
+        if($this->paymentType==null){
+            flash()->error('Please select Payment type');
+            return;
+        }elseif ($this->paymentType=="deposit"){
+            $this->isDeposit=true;
+        }
         $this->name = '';
         $this->email = '';
         $this->isModalOpen = true;
-    }
-    public function deposit(){
-        $this->isDeposit=true;
-        $this->buy();
     }
     public function closeModalPopover()
     {
@@ -70,5 +70,6 @@ class ProductDetail extends Component
         $this->validate();
         $cart->add($this->product,$this->quantity);
         $this -> dispatch('productAddedToCart');
+        return $this->redirect('/cart');
     }
 }

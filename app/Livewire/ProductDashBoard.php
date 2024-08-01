@@ -38,7 +38,7 @@ class ProductDashBoard extends Component
 
     protected $rules = [
         'name' => 'required|min:2',
-        'price' => 'required|integer|min:100|max:1000000000',
+        'price' => 'required|numeric|min:0.1|max:1000000000',
         'description' => 'required|min:2',
     ];
 
@@ -89,7 +89,7 @@ class ProductDashBoard extends Component
         $this->uploading = true;
         $product = Product::updateOrCreate(['id' => $this->id], [
             'name' => $this->name,
-            'price' => $this->price,
+            'price' => ($this->price*100),
             'description' => $this->description,
         ]);
         if ($this->photos != null) {
@@ -112,7 +112,7 @@ class ProductDashBoard extends Component
     {
         $this->id = $product->id;
         $this->name = $product->name;
-        $this->price = $product->price->getAmount();
+        $this->price = $product->price->getAmount()/100;
         $this->description = $product->description;
         $this->existingPhotos = $product->images;
         $this->productDetail = $product;

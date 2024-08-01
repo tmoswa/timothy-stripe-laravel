@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Actions\ShopActions\CreateStripeCheckoutSession;
 use App\Factories\CartFactory;
 use App\Models\Customer;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 class Cart extends Component
@@ -13,6 +14,9 @@ class Cart extends Component
 
     public $name;
     public $email;
+
+    public $cardNumber, $expMonth, $expYear, $cvc;
+
     public function getCartProperty()
     {
         return CartFactory::make()->loadMissing(['items', 'items.product']);
@@ -45,7 +49,7 @@ class Cart extends Component
 
     public function render()
     {
-        return view('livewire.cart');
+        return view('livewire.cart.cart');
     }
 
     public function buy(){

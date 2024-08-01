@@ -18,15 +18,15 @@
                                     @include('livewire.delete-confirmation')
                                 @endif
                             <div class="grid grid-cols-6 gap-4 h-10">
-                                <x-input type="text" id="searchProducts" name="searchProducts" wire:model.live="searchContent" class="col-span-4 ml-1 mt-1" placeholder="Search..."></x-input>
-                                <select wire:model.live="paginate" class="rounded-2xl sm:hidden">
+                                <x-input type="text" id="searchProducts" name="searchProducts" wire:model.live="searchContent" class="col-span-3 ml-1 mt-1" placeholder="Search..."></x-input>
+                                <select wire:model.live="paginate" class="col-span-1 rounded-2xl hidden md:block">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="5">5</option>
                                     <option value="10">10</option>
                                 </select>
                                 <x-button wire:click="create()"
-                                          class="mr-1 mt-1 inline-flex justify-center rounded-md border border-transparent bg-gray-800 text-base font-bold text-white shadow-sm hover:bg-blue-700 float-right">
+                                          class="col-span-2 mr-1 mt-1 inline-flex justify-center rounded-md border border-transparent bg-gray-800 text-base font-bold text-white shadow-sm hover:bg-blue-700 float-right">
                                     Add Product
                                 </x-button>
                             </div>

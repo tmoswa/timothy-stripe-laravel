@@ -56,6 +56,7 @@ class CreateStripeCheckoutSession
                     'description' => $product->description,
                     'metadata' => [
                         'product_id' => $product->id,
+                        'cart_id'=>0
                     ]
                 ]
             ],
@@ -112,5 +113,6 @@ class CreateStripeCheckoutSession
             ];
         })->toArray();
     }
+
 
 }

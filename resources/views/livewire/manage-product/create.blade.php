@@ -27,7 +27,7 @@
                             @error('name') <span class="text-red-500">{{ $message }}</span>@enderror
                         </div>
                         <div class="mb-2">
-                            <x-label for="price" value="{{ __('Price(in cents):') }}"/>
+                            <x-label for="price" value="{{ __('Price(USD):') }}"/>
                             <x-input id="price" type="number" min="100" max="1000000000000" name="price"
                                      class="block mt-1 w-full" required
                                      wire:model="price"/>

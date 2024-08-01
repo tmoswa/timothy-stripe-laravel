@@ -18,6 +18,6 @@ class CartDetail extends Component
     }
     public function render()
     {
-        return view('livewire.cart-detail');
+        return view('livewire.cart.cart-detail');
     }
 }

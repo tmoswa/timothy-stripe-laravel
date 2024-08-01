@@ -19,21 +19,32 @@
             {{$this->product->description}}
         </div>
 
-        <form wire:submit.prevent="buy" id="productQuantity">
+        <form wire:submit.prevent="buy" class="px-2" id="productQuantity">
             <div class="mt-4 space-y-4">
                 <input id="quantity" type="number" wire:model.live="quantity" min="1" max="10000" placeholder="Enter quantity" autofocus class="block w-full rounded-md border-0 py-1.15 pl-3 pr-10 text-gray-800"/>
             </div>
             @error('quantity')
             <div class="mt-2 text-red-600">{{$message}}</div>
             @enderror
-            <div class="px-2 mt-6 grid grid-cols-2 gap-1">
-                <x-button class="button-success col-span-1"> Buy(Once Off) </x-button>
-                <x-button class="button-success col-span-1" wire:click="deposit"> Deposit(50% then Auto Full Payment in 5 minutes) </x-button>
-                <div class="mt-6">
-                    <x-button wire:click="addToCart"> Add to cart</x-button>
+            <div class="px-2 mt-6 grid grid-cols-1 gap-1">
+                <span class="font-bold ">Payment Type:</span>
+                <lable class="col-span-1">
+                    <input type="radio" wire:model="paymentType" value="fullPayment"/>
+                    Once-off Payment
+                </lable>
+                <lable class="col-span-1">
+                    <input type="radio" wire:model="paymentType" value="deposit"/>
+                    Deposit 50% - balance will automatically be processed in 5 minutes
+                </lable>
+            </div>
+            <div class="mt-6 grid grid-cols-2 gap-1">
+                <div wire:click="addToCart" class="cursor-pointer inline-flex items-center px-4 py-2 bg-[#041332] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 transition ease-in-out duration-150">
+                    Add to cart
                 </div>
+                <x-button class="button-success col-span-1"> Checkout This Product </x-button>
             </div>
         </form>
+
     </div>
     @if($isModalOpen)
         @include('livewire.make-purchase.buyer-email')

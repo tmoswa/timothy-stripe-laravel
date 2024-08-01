@@ -1,13 +1,14 @@
-<div class="grid grid-cols-4 mt-12 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-6 md:gap-4 mt-12">
 
-    <x-panel class="col-span-3">
+    <x-panel class="col-span-1 md:col-span-4">
         <table class="w-full">
             <thead>
-            <tr>
+            <tr class="bg-[#041332] text-white">
                 <th class="text-left">Product</th>
                 <th class="text-left">Unit Amount</th>
                 <th class="text-left">Quantity</th>
                 <th class="text-right">Total Amount</th>
+                <th></th>
             </tr>
             <hr/>
             </thead>
@@ -15,7 +16,7 @@
             @foreach($this->items as $item)
                 <tr>
                     <td>{{$item->product->name}}</td>
-                    <td>
+                    <td class="">
                         {{$item->product->price}}
                     </td>
                     <td class="flex items-center">
@@ -42,23 +43,30 @@
                         </button>
                     </td>
                 </tr>
+
+
             @endforeach
             </tbody>
             <tfoot>
+            <hr/>
             <tr>
-
-                <td colspan="3" class="text-right font-medium">Total</td>
+                <td colspan="3" class="text-right font-medium col-span-4">Total</td>
                 <td class="font-medium text-right">{{$this->cart->total}}</td>
                 <td></td>
             </tr>
             </tfoot>
         </table>
+
+
     </x-panel>
 
-    <x-panel class="col-span-1">
+    <x-panel class="md:col-span-2">
         @guest
-            <a href="{{ route('home') }}" class="w-full py-2 px-4 bg-green-600 rounded text-white float-right">Continue Shop</a>
-            <x-button wire:click="buy" class="w-full justify-center mt-3"> Checkout</x-button>
+            @if($this->cart->total->getAmount()>0)
+                <x-button wire:click="buy"  class="w-full justify-center"> Checkout</x-button>
+            @endif
+            <a href="{{ route('home') }}" class="w-full py-2 px-4 bg-green-600 rounded text-white float-right text-center  mt-3">Continue Shop</a>
+
         @endguest
         @auth
 

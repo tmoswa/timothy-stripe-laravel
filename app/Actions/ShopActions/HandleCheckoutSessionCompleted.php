@@ -3,6 +3,7 @@
 namespace App\Actions\ShopActions;
 
 use App\Mail\OrderConfirmation;
+use App\Models\Cart;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -27,8 +28,6 @@ class HandleCheckoutSessionCompleted
             if ($orderSaved == 0) ;
             {
                 $customer = Customer::find($session->metadata->customer_id);
-                $cart = Cart::find($session->metadata->cart_id);
-
                 $amountTotal = $session->amount_total;
                 $order = $customer->orders()->updateOrCreate(['stripe_checkout_session_id' => $session->id], [
                     'stripe_checkout_session_id' => $session->id,
@@ -59,18 +58,20 @@ class HandleCheckoutSessionCompleted
 
                 });
                 $order->items()->saveMany($orderItems);
-                $cart->items()->delete();
-                $cart->delete();
+
+                if($session->metadata->cart_id!=0){
+                    $cart = Cart::find($session->metadata->cart_id);
+                    $cart->items()->delete();
+                    $cart->delete();
+                }
+
             }
         });
-
-        // Sending email outside of transaction closure
-        if($result==='Success!'){
+        // Sending email
             $order = Order::where('stripe_checkout_session_id', $sessionId)->first();
             if ($order) {
                 Mail::to($order->customer)->send(new OrderConfirmation($order));
             }
-        }
 
     }
 
